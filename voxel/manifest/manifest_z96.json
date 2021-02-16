@@ -1,0 +1,25 @@
+{
+  "lighting_angle": 50,
+  "lighting_elevation": 45,
+  "depth_influence": 0,
+  "tiled_normals": true,
+  "soften_edges": 1.5,
+  "alpha_edge_threshold": 0.75,
+  "sampler": "square",
+  "accuracy": 7,
+  "brightness": -0.05,
+  "contrast": 0.2,
+  "overlap": 0.05,
+  "size": {
+    "x": 64,
+    "y": 64,
+    "z": 96
+  },
+  "render_elevation": 30,
+  "sprites": [
+    { "angle": 45,
+      "width": 64,
+	     "flip": true
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+grf {
+	grfid: "TT17";
+	name: string(STR_GRF_NAME);
+	desc: string(STR_GRF_DESC);
+	version: 0;
+	min_compatible_version: 0;
+}
+
+template template_z96(x, y) {
+    //left_x, upper_y, width, height, offset_x, offset_y
+    [ x,		y,		64,		100,		-31,		-68,	NOCROP | ANIM]
+}
+
+spriteset (spr_mast, "src/gfx/mast_8bpp.png") {
+	template_z96(0,0)
+}
+
+spriteset (spr_mast_snow, "src/gfx/mast_snow_8bpp.png") {
+	template_z96(0,0)
+}
+
+spritelayout sprlay_mast {
+	ground {
+		sprite: GROUNDSPRITE_NORMAL;
+	}
+	building {
+		sprite: spr_mast;
+		recolour_mode: RECOLOUR_REMAP;
+		palette: PALETTE_USE_DEFAULT;
+	}
+}
+
+spritelayout sprlay_mast_snow {
+	ground {
+		sprite: GROUNDSPRITE_SNOW;
+	}
+	building {
+		sprite: spr_mast_snow;
+		recolour_mode: RECOLOUR_REMAP;
+		palette: PALETTE_USE_DEFAULT;
+	}
+}
+
+switch (FEAT_OBJECTS, SELF, switch_snow_sprite, terrain_type == TILETYPE_SNOW) {
+	1: sprlay_mast_snow;
+	sprlay_mast;
+}
+
+item (FEAT_OBJECTS, object_mast) {
+	property {
+		class: "MAST";
+		classname: string(STR_GRF_NAME);
+		name: string(STR_GRF_NAME);
+		climates_available: ALL_CLIMATES;
+		object_flags: bitmask(OBJ_FLAG_ANYTHING_REMOVE, OBJ_FLAG_2CC);
+		build_cost_multiplier: 0;
+		remove_cost_multiplier: 0;
+		size: [1,1];
+		introduction_date: 1900;
+		num_views: 1;
+	}
+	graphics {
+		default: switch_snow_sprite;
+		purchase: sprlay_mast;
+	}
+}

@@ -1,0 +1,4 @@
+##grflangid 0x01
+
+STR_GRF_NAME						:Airship Mast
+STR_GRF_DESC						:For docking airships. Coded as an object for demonstration and testing.
