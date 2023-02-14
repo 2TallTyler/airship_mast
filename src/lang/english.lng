@@ -1,4 +1,14 @@
 ##grflangid 0x01
 
-STR_GRF_NAME						:Airship Mast
-STR_GRF_DESC						:For docking airships. Coded as an object for demonstration and testing.
+STR_GRF_NAME			:Airship Mast
+STR_GRF_DESC			:For docking airships. Coded as an object for demonstration and testing.
+
+STR_AIRP				:Empty tile
+STR_SNOW				:Ground snow aware
+STR_NO_SNOW				:Ground not snow aware
+
+#Cardinal direction
+STR_NORTH				:North
+STR_EAST				:East
+STR_SOUTH				:South
+STR_WEST				:West
