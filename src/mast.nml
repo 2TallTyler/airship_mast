@@ -1,66 +1,214 @@
+# 1 "mast.pnml"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "mast.pnml"
 grf {
-	grfid: "TT17";
-	name: string(STR_GRF_NAME);
-	desc: string(STR_GRF_DESC);
-	version: 0;
-	min_compatible_version: 0;
+ grfid: "TT17";
+ name: string(STR_GRF_NAME);
+ desc: string(STR_GRF_DESC);
+ version: 1;
+ min_compatible_version: 0;
 }
 
 template template_z96(x, y) {
     //left_x, upper_y, width, height, offset_x, offset_y
-    [ x,		y,		64,		100,		-31,		-68,	NOCROP | ANIM]
+    [ x, y, 64, 100, -31, -68, NOCROP | ANIM]
 }
 
-spriteset (spr_mast, "src/gfx/mast_8bpp.png") {
-	template_z96(0,0)
+spriteset (spr_ground, "gfx/ground_8bpp.png") {
+ template_z96(0,0)
 }
 
-spriteset (spr_mast_snow, "src/gfx/mast_snow_8bpp.png") {
-	template_z96(0,0)
+spriteset (spr_mast, "gfx/mast_8bpp.png") {
+ template_z96(0,0)
+}
+
+spriteset (spr_mast_snow, "gfx/mast_snow_8bpp.png") {
+ template_z96(0,0)
+}
+
+spritelayout sprlay_empty {
+ ground {
+  sprite: spr_ground;
+ }
 }
 
 spritelayout sprlay_mast {
-	ground {
-		sprite: GROUNDSPRITE_NORMAL;
-	}
-	building {
-		sprite: spr_mast;
-		recolour_mode: RECOLOUR_REMAP;
-		palette: PALETTE_USE_DEFAULT;
-	}
+ ground {
+  sprite: GROUNDSPRITE_NORMAL;
+ }
+ building {
+  sprite: spr_mast;
+  recolour_mode: RECOLOUR_REMAP;
+  palette: PALETTE_USE_DEFAULT;
+ }
+}
+
+spritelayout sprlay_mast_stone {
+ ground {
+  sprite: spr_ground;
+ }
+ building {
+  sprite: spr_mast;
+  recolour_mode: RECOLOUR_REMAP;
+  palette: PALETTE_USE_DEFAULT;
+ }
 }
 
 spritelayout sprlay_mast_snow {
-	ground {
-		sprite: GROUNDSPRITE_SNOW;
-	}
-	building {
-		sprite: spr_mast_snow;
-		recolour_mode: RECOLOUR_REMAP;
-		palette: PALETTE_USE_DEFAULT;
-	}
+ ground {
+  sprite: GROUNDSPRITE_SNOW;
+ }
+ building {
+  sprite: spr_mast_snow;
+  recolour_mode: RECOLOUR_REMAP;
+  palette: PALETTE_USE_DEFAULT;
+ }
+}
+
+
+spritelayout sprlay_mast_snow_stone_ground {
+ ground {
+  sprite: spr_ground;
+ }
+ building {
+  sprite: spr_mast_snow;
+  recolour_mode: RECOLOUR_REMAP;
+  palette: PALETTE_USE_DEFAULT;
+ }
+}
+
+spritelayout sprlay_mast_snow_ground {
+ ground {
+  sprite: GROUNDSPRITE_NORMAL;
+ }
+ building {
+  sprite: spr_mast_snow;
+  recolour_mode: RECOLOUR_REMAP;
+  palette: PALETTE_USE_DEFAULT;
+ }
 }
 
 switch (FEAT_OBJECTS, SELF, switch_snow_sprite, terrain_type == TILETYPE_SNOW) {
-	1: sprlay_mast_snow;
-	sprlay_mast;
+ 1: sprlay_mast_snow;
+ sprlay_mast;
+}
+switch (FEAT_OBJECTS, SELF, switch_snow_stone_sprite, terrain_type == TILETYPE_SNOW) {
+ 1: sprlay_mast_snow;
+ sprlay_mast_stone;
+}
+switch (FEAT_OBJECTS, SELF, switch_snow_sprite_ground, terrain_type == TILETYPE_SNOW) {
+ 1: sprlay_mast_snow_ground;
+ sprlay_mast;
+}
+switch (FEAT_OBJECTS, SELF, switch_snow_stone_sprite_ground, terrain_type == TILETYPE_SNOW) {
+ 1: sprlay_mast_snow_stone_ground;
+ sprlay_mast_stone;
+}
+switch (FEAT_OBJECTS, SELF, switch_stone_sprite, view) {
+ 0: switch_snow_sprite;
+ 1: switch_snow_stone_sprite;
+ 2: switch_snow_sprite_ground;
+ 3: switch_snow_stone_sprite_ground;
+}
+switch (FEAT_OBJECTS, SELF, switch_stone_purch, view) {
+ 0: sprlay_mast;
+ 1: sprlay_mast_stone;
+ 2: sprlay_mast;
+ 3: sprlay_mast_stone;
+}
+switch (FEAT_OBJECTS, SELF, switch_snow_text, view) {
+ 0: string(STR_SNOW);
+ 1: string(STR_SNOW);
+ 2: string(STR_NO_SNOW);
+ 3: string(STR_NO_SNOW);
 }
 
 item (FEAT_OBJECTS, object_mast) {
-	property {
-		class: "MAST";
-		classname: string(STR_GRF_NAME);
-		name: string(STR_GRF_NAME);
-		climates_available: ALL_CLIMATES;
-		object_flags: bitmask(OBJ_FLAG_ANYTHING_REMOVE, OBJ_FLAG_2CC);
-		build_cost_multiplier: 0;
-		remove_cost_multiplier: 0;
-		size: [1,1];
-		introduction_date: 1900;
-		num_views: 1;
-	}
-	graphics {
-		default: switch_snow_sprite;
-		purchase: sprlay_mast;
-	}
+ property {
+  class: "MAST";
+  classname: string(STR_GRF_NAME);
+  name: string(STR_GRF_NAME);
+  climates_available: ALL_CLIMATES;
+  object_flags: bitmask(OBJ_FLAG_ANYTHING_REMOVE, OBJ_FLAG_2CC);
+  build_cost_multiplier: 0;
+  remove_cost_multiplier: 0;
+  size: [1,1];
+  introduction_date: 1900;
+  num_views: 4;
+ }
+ graphics {
+  default: switch_stone_sprite;
+  purchase: switch_stone_purch;
+  additional_text: switch_snow_text;
+ }
+}
+
+//Airport
+item (FEAT_AIRPORTTILES, airtile_blank, 0x0) {
+  property {
+ substitute: 0;
+  }
+  graphics {
+ default: sprlay_empty;
+  }
+}
+
+tilelayout tlay_n {
+  rotation: DIRECTION_NORTH;
+  0, 0: airtile_blank;
+}
+tilelayout tlay_e {
+  rotation: DIRECTION_EAST;
+  0, 0: airtile_blank;
+}
+tilelayout tlay_s {
+  rotation: DIRECTION_SOUTH;
+  0, 0: airtile_blank;
+}
+tilelayout tlay_w {
+  rotation: DIRECTION_WEST;
+  0, 0: airtile_blank;
+}
+
+item (FEAT_AIRPORTS, retainbase, 0x0) {property {override: 2;}}
+
+switch(FEAT_AIRPORTS, SELF, airp_name, layout) {
+ 0: return string(STR_NORTH);
+ 1: return string(STR_EAST);
+ 2: return string(STR_SOUTH);
+ 3: return string(STR_WEST);
+}
+
+//purchase sprites
+spriteset (spr_purch_airp_n, "gfx/purch_8bpp.png") {
+ template_z96(0,0)
+}
+spriteset (spr_purch_airp_e, "gfx/purch_8bpp.png") {
+ template_z96(75,0)
+}
+spriteset (spr_purch_airp_s, "gfx/purch_8bpp.png") {
+ template_z96(150,0)
+}
+spriteset (spr_purch_airp_w, "gfx/purch_8bpp.png") {
+ template_z96(225,0)
+}
+
+switch(FEAT_AIRPORTS, SELF, airp_purch, layout) {
+ 0: spr_purch_airp_n;
+ 1: spr_purch_airp_e;
+ 2: spr_purch_airp_s;
+ 3: spr_purch_airp_w;
+}
+
+item (FEAT_AIRPORTS, airp_mast, 0x1) {
+  property {
+ override: 2;
+ name: string(STR_GRF_NAME);
+ layouts: [tlay_n,tlay_e,tlay_s,tlay_w];
+  }
+  graphics {
+ default: airp_purch;
+ layout_name: airp_name;
+  }
 }
